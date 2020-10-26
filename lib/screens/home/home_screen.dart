@@ -24,9 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
             fit: StackFit.expand,
             children: [
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.4,
-                left: MediaQuery.of(context).size.width * 0.5,
-                child: Image.asset('assets/images/Imagen-2.png'),
+                top: MediaQuery.of(context).size.height * 0.42,
+                left: MediaQuery.of(context).size.width * 0.50,
+                child: Image.asset(
+                  'assets/images/Imagen-2.png',
+                  height: MediaQuery.of(context).size.height * 0.4,
+                ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 90),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.1),
                         Text(
                           'Seleccione un monto',
                           style: TextStyle(
@@ -138,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onPressed: _showDialog,
       padding: EdgeInsets.symmetric(
         horizontal: MediaQuery.of(context).size.width * 0.25,
-        vertical: 30,
+        vertical: MediaQuery.of(context).size.height * 0.03,
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -166,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             RaisedButton(
-              color: Colors.green,
+              color: Colors.red,
               padding: EdgeInsets.symmetric(
                 horizontal: 15,
                 vertical: 10,
@@ -179,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(width: 50),
             RaisedButton(
-              color: Colors.red,
+              color: Colors.lightGreen,
               padding: EdgeInsets.symmetric(
                 horizontal: 15,
                 vertical: 10,
