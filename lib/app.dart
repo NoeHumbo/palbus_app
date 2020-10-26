@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:palbus_app/screens/app/app_screen.dart';
-import 'package:palbus_app/screens/app/splash_screen.dart';
 import 'package:palbus_app/screens/home/home_screen.dart';
 import 'package:palbus_app/screens/home/login_screen.dart';
 import 'package:palbus_app/screens/home/signin_screen.dart';
+import 'package:palbus_app/screens/home/splash_screen.dart';
 import 'package:palbus_app/screens/others/maps_screen.dart';
 import 'package:palbus_app/screens/others/settings_screen.dart';
 import 'package:palbus_app/screens/transactions/payment_screen.dart';
