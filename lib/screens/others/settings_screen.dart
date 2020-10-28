@@ -29,8 +29,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: Column(
         children: <Widget>[
           _crearImagen(context),
-          _crearTitulo(),
-          _crearAcciones(),
+          Stack(
+            children: [
+              Positioned(
+                top: MediaQuery.of(context).size.height*0.10,
+                right: 0,
+                child: Image.asset(
+                  "assets/images/Logomitad.png",
+                  height: MediaQuery.of(context).size.height * 0.38,
+                  fit: BoxFit.cover,
+                  ),
+              ),
+            Column(children: [
+              _crearTitulo(),
+              _crearAcciones(),]
+              ,)
+            ],
+          )
         ],
       ),
     );
@@ -40,64 +55,66 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return SafeArea(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.27,
+        height: MediaQuery.of(context).size.height * 0.32,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/componente.png"),
             fit: BoxFit.none,
-            scale: 1.4,
+            scale: 1.6,
           ),
         ),
         //color: Colors.blue,
-        child: Image.asset(
-          "assets/images/Avatar.png",
-          fit: BoxFit.none,
-          scale: 1,
+        child: CircleAvatar(
+          backgroundColor: Colors.black,
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 94,
+            child: Image.asset(
+            "assets/images/Avatar.png",
+            scale: 1.2,
+            ),
+          ),
         ),
       ),
     );
   }
 
   Widget _crearTitulo() {
-    return SafeArea(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 25.0),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Center(
-                    child: Text(
-                      'Saldo Disponible: S/ 100.00',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.grey, fontSize: 19),
-                    ),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 25.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Center(
+                  child: Text(
+                    'Saldo Disponible: S/ 100.00',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.grey, fontSize: 19),
                   ),
-                  SizedBox(height: 25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Datos del Usuario', style: estiloTitulo),
-                      IconButton(
-                          icon: Icon(
-                            Icons.create,
-                            color: Colors.blue,
-                            size: 30.0,
-                          ),
-                          onPressed: () {})
-                    ],
-                  ),
-                  SizedBox(height: 7.0),
-                  Text('$passengerName', style: estiloSubTitulo),
-                  Text("juanperez@gmail.com", style: estiloSubTitulo),
-                  Text('987654321', style: estiloSubTitulo),
-                ],
-              ),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Text('Datos del Usuario', style: estiloTitulo),
+                    IconButton(
+                        icon: Icon(
+                          Icons.create,
+                          color: Colors.blue,
+                          size: 20.0,
+                        ),
+                        onPressed: () {})
+                  ],
+                ),
+                Text('$passengerName', style: estiloSubTitulo),
+                Text("juanperez@gmail.com", style: estiloSubTitulo),
+                Text('987654321', style: estiloSubTitulo),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -122,15 +139,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
-
-            Opacity(
-              opacity: 0.3,
-              child: Image.asset(
-                "assets/images/Logomitad.png",
-                height: MediaQuery.of(context).size.height * 0.27,
-                fit: BoxFit.cover,
-              ),
-            )
             //Icon(Icons.star, color: Colors.red, size: 30.0),
             //Text('41', style: TextStyle(fontSize: 20.0))
           ],
@@ -139,15 +147,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  FlatButton _buildButton(String texto, f) {
-    return FlatButton(
-      onPressed: f,
-      child: Text(
-        texto,
-        style: TextStyle(fontSize: 15.0, color: Colors.blue),
+  _buildButton(String texto, f) {
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Text(texto,style: TextStyle(color: Colors.blue, fontSize: 15),),
       ),
-      splashColor: Colors.transparent,
+      onTap: f,
+
     );
+
+    
   }
 
   _logout() {
