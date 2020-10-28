@@ -25,13 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.42,
-                left: MediaQuery.of(context).size.width * 0.50,
-                child: Opacity(
-                  opacity: 0.7,
-                  child: Image.asset(
-                    'assets/images/Imagen-2.png',
-                    height: MediaQuery.of(context).size.height * 0.4,
-                  ),
+                left: MediaQuery.of(context).size.width * 0.70,
+                child: Image.asset(
+                  'assets/images/Imagen-2.png',
+                  height: MediaQuery.of(context).size.height * 0.4,
                 ),
               ),
               Column(
@@ -78,29 +75,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       )
                     ],
                   ),
-                  Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.1),
-                        Text(
-                          'Seleccione un monto',
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: 18,
-                            fontWeight: FontWeight.w300,
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height*0.05),
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Seleccione un monto',
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 15),
-                        buildOutlineButton(0.80),
-                        buildSizedBox(),
-                        buildOutlineButton(1.00),
-                        buildSizedBox(),
-                        buildOutlineButton(1.50),
-                        buildSizedBox(),
-                        buildOutlineButton(2.00),
-                      ],
+                          SizedBox(height: 15),
+                          buildOutlineButton(0.80),
+                          buildSizedBox(),
+                          buildOutlineButton(1.00),
+                          buildSizedBox(),
+                          buildOutlineButton(1.50),
+                          buildSizedBox(),
+                          buildOutlineButton(2.00),
+                        ],
+                      ),
                     ),
                   )
                 ],

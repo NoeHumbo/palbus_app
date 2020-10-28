@@ -12,7 +12,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       backgroundColor: Colors.lightBlue[50],
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.lightBlue[50],
+        backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: Stack(
@@ -25,7 +25,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             margin: EdgeInsets.only(
               top: MediaQuery.of(context).size.height * 0.15,
               right: MediaQuery.of(context).size.width * 0.1,
-              bottom: MediaQuery.of(context).size.height * 0.20,
+              bottom: MediaQuery.of(context).size.height * 0.10,
               left: MediaQuery.of(context).size.width * 0.1,
             ),
             child: Center(
@@ -54,7 +54,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     buildText('Fecha'),
                     buildText('Hora'),
                     SizedBox(
-                      height: 60,
+                      height: MediaQuery.of(context).size.height*0.05,
                     ),
                     Row(
                       children: [
@@ -68,8 +68,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                         Text(
                           'Su pago se ha realizado\ncorrectamente',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 15,
                           ),
                         ),
                       ],
@@ -80,7 +81,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
           ),
           Center(
-            heightFactor: 0.96,
+            heightFactor: 0.85,
             child: Column(
               children: [
                 FractionallySizedBox(
@@ -98,7 +99,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Text buildText(String text) {
     return Text(
       text,
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.left,
     );
   }
 }
