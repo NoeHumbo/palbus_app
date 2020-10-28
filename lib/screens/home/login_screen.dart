@@ -66,11 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: <Widget>[
                         formSeparator(),
-                        FractionallySizedBox(
-                          widthFactor: 0.7,
-                          child: Image.asset(
-                            'assets/images/logo-1.png',
-                          ),
+                        Image.asset(
+                          'assets/images/logo-1.png',
+                          height: 240,
+                          width: 230,
                         ),
                         Visibility(
                           visible: _failedLogin,
@@ -80,7 +79,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Text(
                                 'Datos de Acceso Incorrectos',
                                 style: TextStyle(
-                                    fontSize: 20, color: Colors.red[800]),
+                                  fontSize: 16,
+                                  color: Colors.red[800],
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                             ),

@@ -7,8 +7,8 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="palbus_app"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Palbus"
+        android:icon="@mipmap/launcher_icon">
         
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyAKEQIPiuTEnkd80kKNP9C_igV-2Xh20hA"/>
