@@ -3,6 +3,7 @@ import 'package:palbus_app/services/auth_preferences.dart';
 
 class ApiRequester {
   static final api = 'https://palbus.herokuapp.com/';
+  // static final api = 'http://localhost:3000/';
 
   static post(String url, String params) async {
     return await http.post(

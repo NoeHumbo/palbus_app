@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:palbus_app/services/passenger_preferences.dart';
+
 class SettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
+
 class _SettingsScreenState extends State<SettingsScreen> {
   final estiloTitulo = TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold);
   final estiloSubTitulo = TextStyle(fontSize: 18.0, color: Colors.grey);
-  
+
+  String passengerName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getPassengerName();
+  }
+
+  getPassengerName() async {
+    String name = await PassengerPreferences.getPassengerName();
+    setState(() => passengerName = name);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,18 +40,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return SafeArea(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: 250,
+        height: MediaQuery.of(context).size.height * 0.27,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/componente.png"),
             fit: BoxFit.none,
-            scale: 1.3,
+            scale: 1.4,
           ),
         ),
         //color: Colors.blue,
         child: Image.asset(
           "assets/images/Avatar.png",
-          //height: 300.0,
           fit: BoxFit.none,
           scale: 1,
         ),
@@ -46,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _crearTitulo() {
     return SafeArea(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
+        padding: EdgeInsets.symmetric(horizontal: 25.0),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -55,8 +70,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: <Widget>[
                   Center(
                     child: Text(
-                      'Saldo Disponible: S/ 10.00',
-                      style: estiloSubTitulo,
+                      'Saldo Disponible: S/ 100.00',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.grey, fontSize: 19),
                     ),
                   ),
                   SizedBox(height: 25),
@@ -74,15 +90,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ],
                   ),
                   SizedBox(height: 7.0),
-                  Text('Juan Perez', style: estiloSubTitulo),
+                  Text('$passengerName', style: estiloSubTitulo),
                   Text("juanperez@gmail.com", style: estiloSubTitulo),
                   Text('987654321', style: estiloSubTitulo),
                 ],
               ),
             ),
-
-            //Icon(Icons.create, color: Colors.blue, size: 30.0),
-            //Text('41', style: TextStyle(fontSize: 20.0))
           ],
         ),
       ),
@@ -99,22 +112,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 25),
                 child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _accion('Recargar Saldo'),
-                    _accion('Ver Recibos'),
-                    _accion('Eliminar Cuenta'),
-                    _accion('Cerrar Sesion'),
+                    _buildButton('Recargar Saldo', () {}),
+                    _buildButton('Ver Recibos', () {}),
+                    _buildButton('Eliminar Cuenta', _deleteAccount),
+                    _buildButton('Cerrar Sesión', _logout),
                   ],
                 ),
               ),
             ),
 
-            Image.asset(
-              "assets/images/Logomitad.png",
-              height: 220.0,
-              fit: BoxFit.cover,
+            Opacity(
+              opacity: 0.3,
+              child: Image.asset(
+                "assets/images/Logomitad.png",
+                height: MediaQuery.of(context).size.height * 0.27,
+                fit: BoxFit.cover,
+              ),
             )
             //Icon(Icons.star, color: Colors.red, size: 30.0),
             //Text('41', style: TextStyle(fontSize: 20.0))
@@ -124,15 +139,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _accion(String texto) {
-    return Column(
-      children: <Widget>[
-        SizedBox(height: 9.0),
-        Text(
-          texto,
-          style: TextStyle(fontSize: 15.0, color: Colors.blue),
-        )
-      ],
+  FlatButton _buildButton(String texto, f) {
+    return FlatButton(
+      onPressed: f,
+      child: Text(
+        texto,
+        style: TextStyle(fontSize: 15.0, color: Colors.blue),
+      ),
+      splashColor: Colors.transparent,
     );
+  }
+
+  _logout() {
+    // logout
+    Navigator.of(context).pushReplacementNamed('/login');
+  }
+
+  _deleteAccount() {
+    // destroy
+    Navigator.of(context).pushReplacementNamed('/login');
   }
 }

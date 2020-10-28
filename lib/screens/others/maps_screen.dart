@@ -24,7 +24,6 @@ class _MapsScreenState extends State<MapsScreen> {
       mapType: MapType.normal,
       myLocationEnabled: true,
       myLocationButtonEnabled: true,
-      compassEnabled: true,
       zoomControlsEnabled: true,
     );
   }

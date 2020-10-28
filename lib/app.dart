@@ -35,35 +35,46 @@ class _AppState extends State<App> {
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {
           case '/splash_screen':
-            return buildPageRouteBuilder(page: SplashScreen());
+            return buildPageRouteBuilder(
+                page: SplashScreen(), context: context);
           case '/app':
-            return buildPageRouteBuilder(page: AppScreen());
+            return buildPageRouteBuilder(page: AppScreen(), context: context);
           case '/login':
-            return buildPageRouteBuilder(page: LoginScreen());
+            return buildPageRouteBuilder(page: LoginScreen(), context: context);
           case '/sign_in':
-            return buildPageRouteBuilder(page: SigninScreen());
+            return buildPageRouteBuilder(
+                page: SigninScreen(), context: context);
           case '/home':
-            return buildPageRouteBuilder(page: HomeScreen());
+            return buildPageRouteBuilder(page: HomeScreen(), context: context);
           case '/maps':
-            return buildPageRouteBuilder(page: MapsScreen());
+            return buildPageRouteBuilder(page: MapsScreen(), context: context);
           case '/settings':
-            return buildPageRouteBuilder(page: SettingsScreen());
+            return buildPageRouteBuilder(
+                page: SettingsScreen(), context: context);
           case '/payment':
-            return buildPageRouteBuilder(page: PaymentScreen());
+            return buildPageRouteBuilder(
+                page: PaymentScreen(), context: context);
         }
         return null;
       },
     );
   }
 
-  PageRouteBuilder buildPageRouteBuilder({Widget page}) {
+  Route buildPageRouteBuilder({BuildContext context, Widget page}) {
     return PageRouteBuilder(
-      pageBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-      ) =>
-          page,
+      pageBuilder: (_, __, ___) => page,
+      transitionDuration: Duration(milliseconds: 300),
+      transitionsBuilder: (context, animation, _, child) {
+        return FadeTransition(
+          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOut,
+            ),
+          ),
+          child: child,
+        );
+      },
     );
   }
 }

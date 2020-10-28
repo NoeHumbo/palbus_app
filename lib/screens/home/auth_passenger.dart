@@ -7,7 +7,7 @@ class AuthPassenger {
   static logIn(context, token, passengerName) {
     AuthPreferences.setToken(token);
     PassengerPreferences.setPassengerName(passengerName);
-    Navigator.of(context).pushReplacementNamed('/home');
+    Navigator.of(context).pushReplacementNamed('/app');
   }
 
   static logOut(context) {
