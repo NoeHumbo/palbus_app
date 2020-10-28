@@ -1,158 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:palbus_app/screens/home/home_screen.dart';
+import 'package:palbus_app/screens/home/auth_passenger.dart';
+import 'dart:convert' as json;
 
-// class LoginScreen extends StatefulWidget {
-//   static Route<dynamic> route() {
-//     return MaterialPageRoute(
-//       builder: (context) => LoginScreen(),
-//     );
-//   }
-
-//   @override
-//   _LoginScreenState createState() => _LoginScreenState();
-// }
-
-// class _LoginScreenState extends State<LoginScreen>
-//     with SingleTickerProviderStateMixin {
-//   AnimationController controller;
-//   Animation<double> animation;
-
-//   GlobalKey<FormState> _key = GlobalKey();
-
-//   RegExp emailRegExp =
-//       new RegExp(r'^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,3}$');
-//   RegExp contRegExp = new RegExp(r'^([1-zA-Z0-1@.\s]{1,255})$');
-//   // ignore: unused_field
-//   String _correo;
-//   // ignore: unused_field
-//   String _contrasena;
-//   String mensaje = '';
-
-//   bool _logueado = false;
-
-//   initState() {
-//     super.initState();
-//     controller = AnimationController(
-//       duration: const Duration(milliseconds: 1000),
-//       vsync: this,
-//     );
-//     animation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
-//     controller.forward();
-//   }
-
-//   dispose() {
-//     // Es importante SIEMPRE realizar el dispose del controller.
-//     controller.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: _logueado ? HomeScreen() : loginForm(),
-//       //body: loginForm(),
-//     );
-//   }
-
-//   Widget loginForm() {
-//     return SingleChildScrollView(
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: <Widget>[
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: <Widget>[
-//               SizedBox(
-//                 height: 100.0,
-//               ),
-//               Flexible(
-//                 flex: 2,
-//                 child: SafeArea(
-//                   child: FractionallySizedBox(
-//                     widthFactor: 0.7,
-//                     child: Image.asset('assets/images/logo-1.png'),
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//           Container(
-//             width: 300.0, //size.width * .6,
-//             child: Form(
-//               key: _key,
-//               child: Column(
-//                 children: <Widget>[
-//                   TextFormField(
-//                     validator: (text) {
-//                       if (text.length == 0) {
-//                         return "Este campo correo es requerido";
-//                       } else if (!emailRegExp.hasMatch(text)) {
-//                         return "El formato para correo no es correcto";
-//                       }
-//                       return null;
-//                     },
-//                     keyboardType: TextInputType.emailAddress,
-//                     maxLength: 50,
-//                     textAlign: TextAlign.center,
-//                     decoration: InputDecoration(
-//                       hintText: 'Ingrese su Correo',
-//                       labelText: 'Correo',
-//                       counterText: '',
-//                       icon: Icon(Icons.email,
-//                           size: 32.0, color: Colors.blue[800]),
-//                     ),
-//                     onSaved: (text) => _correo = text,
-//                   ),
-//                   TextFormField(
-//                     obscureText: true,
-//                     validator: (text) {
-//                       if (text.length == 0) {
-//                         return "Este campo contraseña es requerido";
-//                       } else if (text.length <= 5) {
-//                         return "Su contraseña debe ser al menos de 5 caracteres";
-//                       } else if (!contRegExp.hasMatch(text)) {
-//                         return "El formato para contraseña no es correcto";
-//                       }
-//                       return null;
-//                     },
-//                     keyboardType: TextInputType.text,
-//                     maxLength: 20,
-//                     textAlign: TextAlign.center,
-//                     decoration: InputDecoration(
-//                       hintText: 'Ingrese su Contraseña',
-//                       labelText: 'Contraseña',
-//                       counterText: '',
-//                       icon:
-//                           Icon(Icons.lock, size: 32.0, color: Colors.blue[800]),
-//                     ),
-//                     onSaved: (text) => _contrasena = text,
-//                   ),
-//                   IconButton(
-//                     onPressed: () {
-//                       if (_key.currentState.validate()) {
-//                         _key.currentState.save();
-//                         //Aqui se llamaria a su API para hacer el login
-//                         setState(() {
-//                           _logueado = true;
-//                         });
-//                         Navigator.of(context).pushReplacementNamed('/app');
-//                       }
-//                     },
-//                     icon: Icon(
-//                       Icons.arrow_forward,
-//                       size: 42.0,
-//                       color: Colors.blue[800],
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+import 'package:palbus_app/screens/home/login_requester.dart';
 
 // class AnimatedLogo extends AnimatedWidget {
 //   // Maneja los Tween estáticos debido a que estos no cambian.
@@ -183,11 +33,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _loginFormKey = GlobalKey<FormState>();
-  final _usernameController = new TextEditingController();
+  final _emailController = new TextEditingController();
   final _passwordController = new TextEditingController();
 
   bool _failedLogin = false; //visibility
   bool _isLoading = false;
+
+  bool _isFullE = false;
+  bool _isFullP = false;
 
   bool _passwordIsObscured = true;
   Color _eyeButtonColor = Colors.grey;
@@ -234,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         formSeparator(),
-                        buildUsernameField(),
+                        buildEmailField(),
                         formSeparator(),
                         buildPasswordField(context),
                         formSeparator(),
@@ -263,20 +116,32 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  TextFormField buildUsernameField() {
+  TextFormField buildEmailField() {
     return TextFormField(
-      controller: _usernameController,
-      validator: (usernameInput) {
-        return usernameInput.isEmpty ? 'Debe ingresar su correo' : null;
+      controller: _emailController,
+      validator: (value) {
+        if (value.isEmpty ||
+            !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                .hasMatch(value)) {
+          return 'Debe ingresar un email válido';
+        }
+        return null;
       },
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
         ),
         labelText: 'Email',
-        // labelStyle: InputTheme.labelTextStyle,
       ),
+      keyboardType: TextInputType.emailAddress,
       style: TextStyle(fontSize: 14),
+      onChanged: (value) {
+        if (value.isNotEmpty) {
+          setState(() => _isFullE = true);
+        } else if (value == "") {
+          setState(() => _isFullE = false);
+        }
+      },
     );
   }
 
@@ -311,30 +176,32 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       style: TextStyle(fontSize: 14),
       obscureText: _passwordIsObscured,
+      onChanged: (value) {
+        if (value.isNotEmpty) {
+          setState(() => _isFullP = true);
+        } else if (value == "") {
+          setState(() => _isFullP = false);
+        }
+      },
     );
   }
 
   FlatButton buildLoginButton(BuildContext context) {
     return FlatButton(
-      color: Colors.grey[400],
+      color: _isFullE && _isFullP ? Colors.blue : Colors.grey[400],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       padding: EdgeInsets.symmetric(vertical: 15),
       child: Text(
         'Ingresar',
-        // style: BtnSuccessTheme.btnTextStyle,
       ),
       onPressed: () {
         FocusNode currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
         }
-        setState(() {
-          this._failedLogin = false;
-        });
+        setState(() => this._failedLogin = false);
         if (_loginFormKey.currentState.validate()) {
-          setState(() => _isLoading = true);
-          Navigator.of(context).pushReplacementNamed('/app');
-          // authenticateClient(context);
+          authenticatePassenger(context);
         }
       },
     );
@@ -362,31 +229,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
   SizedBox formSeparator() => SizedBox(height: 30);
 
-  // void authenticateClient(BuildContext context) async {
-  //   var response = await AuthenticationRequester.login(
-  //     _usernameController.text,
-  //     _passwordController.text,
-  //   );
-  //   var responseJSON = json.jsonDecode(response.body);
+  void authenticatePassenger(BuildContext context) async {
+    var response = await LoginRequester.login(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
+    var responseJSON = json.jsonDecode(response.body);
+    // final clientStore = context.read<ClientStore>();
 
-  //   final clientStore = context.read<ClientStore>();
-
-  //   if (response.statusCode == 200) {
-  //     AuthClient.logIn(
-  //       context,
-  //       responseJSON['token'],
-  //       json.jsonDecode(responseJSON['client'])['name'],
-  //     );
-  //     clientStore.setClientName(
-  //       json.jsonDecode(responseJSON['client'])['name'],
-  //     );
-  //     setState(() => _isLoading = false);
-  //   } else if (response.statusCode == 401) {
-  //     setState(() {
-  //       this._failedLogin = true;
-  //       this._isLoading = false;
-  //     });
-  //     this._passwordController.clear();
-  //   }
-  // }
+    if (response.statusCode == 200) {
+      AuthPassenger.logIn(
+        context,
+        responseJSON['token'],
+        json.jsonDecode(responseJSON['passenger'])['name'],
+      );
+    } else if (response.statusCode == 401) {
+      setState(() {
+        this._failedLogin = true;
+      });
+      this._passwordController.clear();
+    }
+  }
 }

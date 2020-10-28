@@ -26,9 +26,12 @@ class _HomeScreenState extends State<HomeScreen> {
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.42,
                 left: MediaQuery.of(context).size.width * 0.50,
-                child: Image.asset(
-                  'assets/images/Imagen-2.png',
-                  height: MediaQuery.of(context).size.height * 0.4,
+                child: Opacity(
+                  opacity: 0.7,
+                  child: Image.asset(
+                    'assets/images/Imagen-2.png',
+                    height: MediaQuery.of(context).size.height * 0.4,
+                  ),
                 ),
               ),
               Column(
@@ -52,8 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: 2,
                         ),
                         onPressed: () {},
+                        splashColor: Colors.transparent,
                         padding: EdgeInsets.only(
-                            top: 10, bottom: 10, left: 40, right: 15),
+                          top: 10,
+                          bottom: 10,
+                          left: 40,
+                          right: 15,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20),
