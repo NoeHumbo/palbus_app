@@ -1,30 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:palbus_app/screens/home/auth_passenger.dart';
+import 'package:palbus_app/services/auth_passenger.dart';
 import 'dart:convert' as json;
 
-import 'package:palbus_app/screens/home/login_requester.dart';
-
-// class AnimatedLogo extends AnimatedWidget {
-//   // Maneja los Tween estáticos debido a que estos no cambian.
-//   static final _opacityTween = Tween<double>(begin: 0.1, end: 1.0);
-//   static final _sizeTween = Tween<double>(begin: 0.0, end: 150.0);
-
-//   AnimatedLogo({Key key, Animation<double> animation})
-//       : super(key: key, listenable: animation);
-
-//   Widget build(BuildContext context) {
-//     final Animation<double> animation = listenable;
-//     return Opacity(
-//       opacity: _opacityTween.evaluate(animation),
-//       child: Container(
-//         margin: EdgeInsets.symmetric(vertical: 10.0),
-//         height: _sizeTween.evaluate(animation), // Aumenta la altura
-//         width: _sizeTween.evaluate(animation), // Aumenta el ancho
-//         child: FlutterLogo(),
-//       ),
-//     );
-//   }
-// }
+import 'package:palbus_app/database/auth_requester.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -194,6 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.symmetric(vertical: 15),
       child: Text(
         'Ingresar',
+        style: TextStyle(color: _isFullE && _isFullP ? Colors.white : Colors.black),
       ),
       onPressed: () {
         FocusNode currentFocus = FocusScope.of(context);
@@ -212,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return FlatButton(
       splashColor: Colors.transparent,
       onPressed: () {
-        Navigator.of(context).pushNamed('/signin');
+        Navigator.of(context).pushNamed('/sign_in');
       },
       child: Container(
         child: Column(
@@ -231,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
   SizedBox formSeparator() => SizedBox(height: 30);
 
   void authenticatePassenger(BuildContext context) async {
-    var response = await LoginRequester.login(
+    var response = await AuthRequester.login(
       _emailController.text.trim(),
       _passwordController.text.trim(),
     );
