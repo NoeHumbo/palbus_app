@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:palbus_app/services/auth_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -13,7 +14,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer(const Duration(milliseconds: 1000), _onShowLogin);
+    _timer = Timer(const Duration(milliseconds: 1000), () async {
+      await AuthPreferences.getToken() != null
+          ? Navigator.of(context).pushReplacementNamed('/app')
+          : Navigator.of(context).pushReplacementNamed('/login');
+    });
   }
 
   @override
@@ -21,8 +26,6 @@ class _SplashScreenState extends State<SplashScreen> {
     _timer.cancel();
     super.dispose();
   }
-
-  void _onShowLogin() => Navigator.of(context).pushReplacementNamed('/login');
 
   @override
   Widget build(BuildContext context) {

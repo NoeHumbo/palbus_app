@@ -1,5 +1,9 @@
+import 'dart:convert' as json;
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:palbus_app/database/balance_requester.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,11 +13,25 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   ScanResult scanResult;
 
+  String _balance = '0.0';
+
   static final _possibleFormats = BarcodeFormat.values.toList()
     ..removeWhere((e) => e == BarcodeFormat.unknown);
 
   List<BarcodeFormat> selectedFormats = [..._possibleFormats];
 
+  @override
+  void initState() {
+    super.initState();
+    getBalance();
+  }
+
+  getBalance() async {
+    var response = await BalanceRequester.balance();
+    var responseJSON = json.jsonDecode(response.body);
+    setState(() => this._balance = responseJSON[0]['amount'].toString());
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,14 +50,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       OutlineButton(
                         child: Text(
-                          'Saldo: S/. 10.00',
+                          'Saldo: S/. $_balance',
                           style: TextStyle(
                             color: Colors.grey[700],
                             fontSize: 15,
@@ -75,11 +93,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       )
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height*0.05),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.70,
                     child: Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'Seleccione un monto',
@@ -97,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           buildOutlineButton(1.50),
                           buildSizedBox(),
                           buildOutlineButton(2.00),
+                          buildSizedBox(),
                         ],
                       ),
                     ),
@@ -130,7 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // https://www.facebook.com/
   }
 
-  SizedBox buildSizedBox() => SizedBox(height: 25);
+  SizedBox buildSizedBox() =>
+      SizedBox(height: MediaQuery.of(context).size.height * 0.03);
 
   RaisedButton buildOutlineButton(double value) {
     return RaisedButton(
@@ -159,14 +179,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showDialog() {
     showDialog(
-      context: context,
+        context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
             side: BorderSide(
               color: Colors.blue[600],
-              width: 3,
+              width: 1,
             ),
           ),
           actionsPadding: EdgeInsets.only(bottom: 10),
@@ -176,16 +196,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             RaisedButton(
-              color: Colors.red,
+              color: Colors.white,
               padding: EdgeInsets.symmetric(
                 horizontal: 15,
                 vertical: 10,
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
+                side: BorderSide(color: Colors.red, width: 2)
               ),
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancelar'),
+              child: Text('Cancelar', style: TextStyle(color: Colors.red),),
             ),
             SizedBox(width: 50),
             RaisedButton(

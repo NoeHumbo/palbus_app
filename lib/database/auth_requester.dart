@@ -3,7 +3,7 @@ import 'dart:convert' as json;
 import 'package:palbus_app/services/api_requester.dart';
 
 
-class LoginRequester {
+class AuthRequester {
   static login(email, password) async {
     String params = json.jsonEncode({
       'email': email,
@@ -43,7 +43,15 @@ class LoginRequester {
     );
   }
 
-  static clientIdConnected() async {
-    return await ApiRequester.get('/security/client_id_connected');
+  static logout() async {
+    return await ApiRequester.get('/logout_passenger');
+  }
+
+  static destroyPassenger() async {
+    return await ApiRequester.delete('/passenger_destroy');
+  }
+
+  static passenger() async {
+    return await ApiRequester.get('/passenger_show');
   }
 }

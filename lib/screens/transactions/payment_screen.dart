@@ -17,71 +17,72 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
       body: Stack(
         children: [
-          Card(
-            elevation: 10,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: Colors.blue[700], width: 3),
-            ),
-            margin: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * 0.15,
-              right: MediaQuery.of(context).size.width * 0.1,
-              bottom: MediaQuery.of(context).size.height * 0.10,
-              left: MediaQuery.of(context).size.width * 0.1,
-            ),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 75, left: 25, right: 25, bottom: 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'BOLETA DE PAGO',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
+          Center(
+            child: Card(
+              elevation: 5,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.08),
+                      Text(
+                        'BOLETA DE PAGO',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'N° 34570',
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 15),
-                    buildText('Nombre'),
-                    buildText('Monto'),
-                    buildText('Empresa'),
-                    buildText('Fecha'),
-                    buildText('Hora'),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height*0.05,
-                    ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Icon(
-                            Icons.check_circle_outline,
-                            color: Colors.lightGreen,
-                            size: 60,
+                      Text(
+                        'N° 34570',
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 20),
+                      buildText('Nombre:   Noe Humbo'),
+                      buildText('Monto:    100.00'),
+                      buildText('Empresa:  SUPER STAR'),
+                      buildText('Fecha:    2020-10-25'),
+                      buildText('Hora:     13:56'),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.1,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Icon(
+                              Icons.check_circle_outline,
+                              color: Colors.lightGreen,
+                              size: 60,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Su pago se ha realizado\ncorrectamente',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 15,
+                          Text(
+                            'Su pago se ha\nrealizado\ncorrectamente',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
           Center(
-            heightFactor: 0.85,
+            heightFactor: 0.9,
             child: Column(
               children: [
                 FractionallySizedBox(
