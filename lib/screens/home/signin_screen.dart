@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:palbus_app/app.dart';
 
-class RegistroUser extends StatefulWidget {
+class SigninScreen extends StatefulWidget {
   @override
-  _RegistroUserState createState() {
-    return _RegistroUserState();
+  _SigninScreenState createState() {
+    return _SigninScreenState();
   }
 }
 
-class _RegistroUserState extends State<RegistroUser> {
+class _SigninScreenState extends State<SigninScreen> {
   String nameValue;
   String lastnameValue;
   String passwordone;
