@@ -14,8 +14,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = new TextEditingController();
   final _passwordController = new TextEditingController();
 
-  bool _failedLogin = false; //visibility
-  bool _isLoading = false;
+  bool _failedLogin = false;
 
   bool _isFullE = false;
   bool _isFullP = false;
@@ -26,71 +25,63 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          SafeArea(
-            child: GestureDetector(
-              onTap: () {
-                FocusNode currentFocus = FocusScope.of(context);
-                if (!currentFocus.hasPrimaryFocus) {
-                  currentFocus.unfocus();
-                }
-              },
-              child: Container(
-                child: Form(
-                  key: _loginFormKey,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(40, 40, 40, 10),
-                    child: Column(
-                      children: <Widget>[
-                        formSeparator(),
-                        Image.asset(
-                          'assets/images/logo-1.png',
-                          height: 240,
-                          width: 230,
-                        ),
-                        Visibility(
-                          visible: _failedLogin,
-                          child: Container(
-                            padding: EdgeInsets.only(top: 15),
-                            child: Center(
-                              child: Text(
-                                'Datos de Acceso Incorrectos',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.red[800],
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: () {
+            FocusNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Container(
+            child: Form(
+              key: _loginFormKey,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(40, 40, 40, 10),
+                child: Column(
+                  children: <Widget>[
+                    formSeparator(),
+                    Image.asset(
+                      'assets/images/logo-1.png',
+                      height: 240,
+                      width: 230,
+                    ),
+                    Visibility(
+                      visible: _failedLogin,
+                      child: Container(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Center(
+                          child: Text(
+                            'Datos de Acceso Incorrectos',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.red[800],
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                        formSeparator(),
-                        buildEmailField(),
-                        formSeparator(),
-                        buildPasswordField(context),
-                        formSeparator(),
-                        SizedBox(
-                          width: double.infinity,
-                          child: buildLoginButton(context),
-                        ),
-                        formSeparator(),
-                        SizedBox(
-                          width: double.infinity,
-                          child: buildSignupButton(context),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                    formSeparator(),
+                    buildEmailField(),
+                    formSeparator(),
+                    buildPasswordField(context),
+                    formSeparator(),
+                    SizedBox(
+                      width: double.infinity,
+                      child: buildLoginButton(context),
+                    ),
+                    formSeparator(),
+                    SizedBox(
+                      width: double.infinity,
+                      child: buildSignupButton(context),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-          Visibility(
-            visible: _isLoading,
-            child: CircularProgressIndicator(),
-          ),
-        ],
+        ),
       ),
     );
   }

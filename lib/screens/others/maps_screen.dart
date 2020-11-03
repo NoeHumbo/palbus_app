@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:palbus_app/database/route_list.dart';
 
 class MapsScreen extends StatefulWidget {
   @override
@@ -9,19 +10,9 @@ class MapsScreen extends StatefulWidget {
 }
 
 class _MapsScreenState extends State<MapsScreen> {
-  Polyline _miRuta = new Polyline(
-      polylineId: PolylineId('1'),
-      color: Colors.black,
-      width: 5,
-      points: <LatLng>[
-        LatLng(-5.182909, -80.633246),
-        LatLng(-5.183909, -80.633246),
-        LatLng(-5.183909, -80.635246)
-      ]);
-
-  Marker _miMarcador = new Marker(
+  Marker _marker = new Marker(
     markerId: MarkerId('1'),
-    position: LatLng(-5.183909, -80.635246),
+    position: LatLng(-5.182786, -80.623684),
   );
 
   Completer<GoogleMapController> _controller = Completer();
@@ -47,8 +38,8 @@ class _MapsScreenState extends State<MapsScreen> {
       myLocationEnabled: false,
       myLocationButtonEnabled: true,
       zoomControlsEnabled: true,
-      polylines: {_miRuta},
-      markers: {_miMarcador},
+      polylines: RouteList.listLatLng(),
+      markers: {_marker},
     );
   }
 }

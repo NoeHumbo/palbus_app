@@ -2,8 +2,8 @@ import 'package:http/http.dart' as http;
 import 'package:palbus_app/services/auth_preferences.dart';
 
 class ApiRequester {
-  // static final api = 'https://palbus.herokuapp.com/';
-  static final api = 'http://localhost:3000/';
+  static final api = 'https://palbus.herokuapp.com/';
+  // static final api = 'http://localhost:3000/';
 
   static post(String url, String params) async {
     return await http.post(
@@ -27,7 +27,6 @@ class ApiRequester {
   }
 
   static delete(String url) async {
-    print(await AuthPreferences.getToken());
     return await http.delete(
       api + url,
       headers: {

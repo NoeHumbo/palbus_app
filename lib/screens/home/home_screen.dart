@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:palbus_app/database/balance_requester.dart';
+import 'package:palbus_app/database/payment_requester.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var responseJSON = json.jsonDecode(response.body);
     setState(() => this._balance = responseJSON[0]['amount'].toString());
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -129,33 +129,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  _scanQR() async {
-    dynamic futureString;
-
-    try {
-      futureString = await BarcodeScanner.scan(
-        options: ScanOptions(
-          restrictFormat: selectedFormats,
-          strings: const {'cancel': 'Cancelar'},
-        ),
-      );
-    } catch (e) {
-      futureString = e.toString();
-    }
-
-    if (futureString.rawContent != null) {
-      Navigator.of(context).pushNamed('/payment');
-    }
-    // https://www.facebook.com/
-  }
-
   SizedBox buildSizedBox() =>
       SizedBox(height: MediaQuery.of(context).size.height * 0.03);
 
-  RaisedButton buildOutlineButton(double value) {
+  RaisedButton buildOutlineButton(double price) {
     return RaisedButton(
       child: Text(
-        'S/. ${value}0',
+        'S/. ${price}0',
         style: TextStyle(
           fontSize: 20,
           color: Colors.grey[600],
@@ -165,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
       color: Colors.white,
       highlightColor: Colors.blue,
       elevation: 5,
-      onPressed: _showDialog,
+      onPressed: () => _showDialog(price),
       padding: EdgeInsets.symmetric(
         horizontal: MediaQuery.of(context).size.width * 0.25,
         vertical: MediaQuery.of(context).size.height * 0.03,
@@ -177,9 +157,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showDialog() {
+  void _showDialog(double price) {
     showDialog(
-        context: context,
+      context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -202,11 +182,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 vertical: 10,
               ),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: BorderSide(color: Colors.red, width: 2)
-              ),
+                  borderRadius: BorderRadius.circular(10),
+                  side: BorderSide(color: Colors.red, width: 2)),
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancelar', style: TextStyle(color: Colors.red),),
+              child: Text(
+                'Cancelar',
+                style: TextStyle(color: Colors.red),
+              ),
             ),
             SizedBox(width: 50),
             RaisedButton(
@@ -220,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onPressed: () {
                 Navigator.pop(context);
-                _scanQR();
+                _scanQR(price);
               },
               child: Text('Aceptar'),
             ),
@@ -229,5 +211,60 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  _scanQR(double price) async {
+    dynamic futureString;
+
+    try {
+      futureString = await BarcodeScanner.scan(
+        options: ScanOptions(
+          restrictFormat: selectedFormats,
+          strings: const {'cancel': 'Cancelar'},
+        ),
+      );
+    } catch (e) {
+      futureString = e.toString();
+    }
+
+    print('HOLA FUTURE SCAN QR');
+    print(futureString.rawContent);
+
+    if (futureString.rawContent != '') {
+      var qrValue = json.jsonDecode(futureString.rawContent);
+      // int driverID = qrValue['d_id'];
+      int busID = qrValue['b_id'];
+      // int transportCompanyID = qrValue['tc_id'];
+      // int routeID = qrValue['r_id'];
+      int tariffID = qrValue['t_id'];
+
+      if (futureString.rawContent.contains('d_id')) {
+        var response = await PaymentRequester.createPayment(
+          amount: price.toString(),
+          busID: busID.toString(),
+          tariffID: tariffID.toString(),
+        );
+        var responseJSON = json.jsonDecode(response.body);
+        if (response.statusCode == 201) {
+          Navigator.of(context).pushNamed('/payment', arguments: {'id': responseJSON['id']});
+        }
+      } else {
+        invalidQR();
+      }
+    } else {
+      invalidQR();
+    }
+  }
+
+  invalidQR() {
+    Widget snackbar = SnackBar(
+      content: Text('Código QR inválido', textAlign: TextAlign.center),
+      backgroundColor: Colors.blueGrey[600],
+      duration: Duration(milliseconds: 1000),
+      elevation: 5,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+    );
+    Scaffold.of(context).showSnackBar(snackbar);
   }
 }

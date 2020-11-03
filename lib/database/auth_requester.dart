@@ -17,28 +17,26 @@ class AuthRequester {
   }
 
   static signUp({
-    String clientID,
-    String email,
-    bool isOrganization,
-    String mobileNumber,
     String name,
+    String email,
+    String dni,
+    String mobileNumber,
     String password,
     String passwordConfirmation,
   }) async {
     String params = json.jsonEncode({
-      'client': {
-        'client_id': clientID,
-        'email': email,
-        'is_organization': isOrganization,
-        'mobile_number': mobileNumber,
+      'passenger': {
         'name': name,
+        'dni': dni,
+        'email': email,
+        'mobile_number': mobileNumber,
         'password': password,
         'password_confirmation': passwordConfirmation,
+        'balance_attributes': {}
       }
     });
-    print(params);
     return await ApiRequester.post(
-      '/security/sign_up',
+      '/passengers',
       params,
     );
   }

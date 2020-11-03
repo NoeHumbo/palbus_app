@@ -1,11 +1,44 @@
+import 'dart:convert' as json;
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:palbus_app/database/payment_requester.dart';
 
 class PaymentScreen extends StatefulWidget {
+  final int id;
+
+  const PaymentScreen({Key key, this.id}) : super(key: key);
+
   @override
-  _PaymentScreenState createState() => _PaymentScreenState();
+  _PaymentScreenState createState() => _PaymentScreenState(id);
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  final int id;
+  String name = '';
+  String amount = '';
+  String transportCompany = '';
+  DateTime date = DateTime.now();
+
+  _PaymentScreenState(this.id);
+
+  @override
+  void initState() {
+    super.initState();
+    getPayment();
+  }
+
+  getPayment() async {
+    var response = await PaymentRequester.getPayment(id.toString());
+    var responseJSON = json.jsonDecode(response.body);
+    setState(() {
+      this.name = responseJSON['passenger']['name'];
+      this.amount = responseJSON['amount'];
+      this.transportCompany = responseJSON['transport_company']['name'];
+      this.date = responseJSON['created_at']; // formatter
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,11 +80,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 20),
-                      buildText('Nombre:   Noe Humbo'),
-                      buildText('Monto:    100.00'),
-                      buildText('Empresa:  SUPER STAR'),
-                      buildText('Fecha:    2020-10-25'),
-                      buildText('Hora:     13:56'),
+                      buildText('Nombre:  $name'),
+                      buildText('Monto:   $amount'),
+                      buildText('Empresa: $transportCompany'),
+                      buildText('Fecha:   ${getFormatDate(date)}'),
+                      buildText(
+                          'Hora:    ${getFormatDate(date, format: 'HH:mm')}'),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.1,
                       ),
@@ -69,9 +103,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           Text(
                             'Su pago se ha\nrealizado\ncorrectamente',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
+                            style: TextStyle(fontSize: 15),
                           ),
                         ],
                       ),
@@ -91,7 +123,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -102,5 +134,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
       text,
       textAlign: TextAlign.left,
     );
+  }
+
+  static getFormatDate(DateTime date, {String format = "dd MM yyyy"}) {
+    var formatter = new DateFormat(format, 'es_PE');
+    return formatter.format(date);
+    // .split(' ')
+    // .map((e) => e[0].toUpperCase() + e.substring(1).replaceFirst('.', ''))
+    // .join(' ');
   }
 }

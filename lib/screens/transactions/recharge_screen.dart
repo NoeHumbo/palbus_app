@@ -231,6 +231,6 @@ class _RechargeScreenState extends State<RechargeScreen> {
   SizedBox formSeparator() => SizedBox(height: 30);
 
   void rechargeBalance(BuildContext context) async {
-
+    
   }
 }
