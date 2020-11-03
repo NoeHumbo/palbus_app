@@ -6,7 +6,7 @@ import 'package:palbus_app/screens/home/home_screen.dart';
 import 'package:palbus_app/screens/home/login_screen.dart';
 import 'package:palbus_app/screens/home/signin_screen.dart';
 import 'package:palbus_app/screens/home/splash_screen.dart';
-import 'package:palbus_app/screens/others/list_payments.dart';
+import 'package:palbus_app/screens/others/view_receipts.dart';
 import 'package:palbus_app/screens/others/maps_screen.dart';
 import 'package:palbus_app/screens/others/settings_screen.dart';
 import 'package:palbus_app/screens/transactions/payment_screen.dart';
@@ -58,7 +58,7 @@ class _AppState extends State<App> {
                 page: PaymentScreen(), context: context);
           case '/list_payments':
             return buildPageRouteBuilder(
-                page: ListPaymentsScreen(), context: context);
+                page: ViewReceipts(), context: context);
           case '/recharge':
             return buildPageRouteBuilder(
                 page: RechargeScreen(), context: context);

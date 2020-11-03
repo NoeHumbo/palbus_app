@@ -14,10 +14,10 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final estiloSubTitulo = TextStyle(fontSize: 16.0, color: Colors.grey);
 
-  String passengerName = '';
+  String passengerName = ' ';
 
-  String _mobileNumber = '';
-  String _email ='';
+  String _mobileNumber = ' ';
+  String _email = ' ';
   String _balance = '0.0';
 
   @override
@@ -36,75 +36,73 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-                child: Column(
-                  children: <Widget>[
-                    _crearImagen(context),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Text(
-                        'Saldo Disponible:\nS/ $_balance',
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey, fontSize: 18),
-                      ),
-                    ),
-                    Row(
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            _crearImagen(context),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(
+                'Saldo Disponible:\nS/ $_balance',
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey, fontSize: 18),
+              ),
+            ),
+            Row(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.7,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Datos del Usuario',
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.edit),
-                                      onPressed: () => Navigator.of(context)
-                                          .pushNamed('/edit_passenger'),
-                                    )
-                                  ],
-                                ),
-                                Text('$passengerName', style: estiloSubTitulo),
-                                Text("$_email",
-                                    style: estiloSubTitulo),
-                                Text('$_mobileNumber', style: estiloSubTitulo),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                ),
-                                _buildButton('Recargar Saldo', goToRecharge),
-                                _buildButton('Ver Recibos', goToListPayments),
-                                _buildButton('Eliminar Cuenta', _deleteAccount),
-                                _buildButton('Cerrar Sesión', _logout),
-                              ],
+                        Row(
+                          children: [
+                            Text(
+                              'Datos del Usuario',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
-                          ),
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () => Navigator.of(context)
+                                  .pushNamed('/edit_passenger'),
+                            )
+                          ],
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          child: Center(
-                            child: Image.asset(
-                              'assets/images/Logomitad.png',
-                            ),
-                          ),
-                        )
+                        Text('$passengerName', style: estiloSubTitulo),
+                        Text("$_email", style: estiloSubTitulo),
+                        Text('$_mobileNumber', style: estiloSubTitulo),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.1,
+                        ),
+                        _buildButton('Recargar Saldo', goToRecharge),
+                        _buildButton('Ver Recibos', goToListPayments),
+                        _buildButton('Eliminar Cuenta', _deleteAccount),
+                        _buildButton('Cerrar Sesión', _logout),
                       ],
-                    )
-                  ],
+                    ),
+                  ),
                 ),
-              )
-            );
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/Logomitad.png',
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _crearImagen(BuildContext context) {
@@ -148,17 +146,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  _logout() {
-    AuthPassenger.logOut(context);
-  }
+  _logout() => AuthPassenger.logOut(context);
 
-  _deleteAccount() {
-    AuthPassenger.destroy(context);
-  }
+  _deleteAccount() => AuthPassenger.destroy(context);
 
   getPassenger() async {
     var response = await AuthRequester.passenger();
     var responseJSON = json.jsonDecode(response.body);
+    print('HOLAAAAAAAA');
+    print(response.body);
     setState(() {
       this._email = responseJSON['email'];
       this._mobileNumber = responseJSON['mobile_number'];
