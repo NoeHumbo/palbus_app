@@ -1,26 +1,26 @@
 import 'dart:convert' as json;
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:palbus_app/database/payment_requester.dart';
+import 'package:palbus_app/services/formatters.dart';
 
 class PaymentScreen extends StatefulWidget {
-  final int id;
+  final PaymentArguments arguments;
 
-  const PaymentScreen({Key key, this.id}) : super(key: key);
+  const PaymentScreen({Key key, this.arguments}) : super(key: key);
 
   @override
-  _PaymentScreenState createState() => _PaymentScreenState(id);
+  _PaymentScreenState createState() => _PaymentScreenState(id: arguments.id);
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
   final int id;
-  String name = '';
-  String amount = '';
-  String transportCompany = '';
+  String name = ' ';
+  double amount = 0.0;
+  String transportCompany = ' ';
   DateTime date = DateTime.now();
 
-  _PaymentScreenState(this.id);
+  _PaymentScreenState({@required this.id});
 
   @override
   void initState() {
@@ -31,11 +31,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
   getPayment() async {
     var response = await PaymentRequester.getPayment(id.toString());
     var responseJSON = json.jsonDecode(response.body);
+    var bus = json.jsonDecode(json.jsonEncode(responseJSON['bus']));
     setState(() {
-      this.name = responseJSON['passenger']['name'];
+      this.name = json
+          .jsonDecode(json.jsonEncode(responseJSON['passenger']))['name']
+          .toString();
       this.amount = responseJSON['amount'];
-      this.transportCompany = responseJSON['transport_company']['name'];
-      this.date = responseJSON['created_at']; // formatter
+      this.transportCompany = json
+          .jsonDecode(json.jsonEncode(bus['transport_company']))['name']
+          .toString();
+      this.date = DateTime.parse(responseJSON['created_at']); // formatter
     });
   }
 
@@ -45,6 +50,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
       backgroundColor: Colors.lightBlue[50],
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pushReplacementNamed('/app'),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -76,16 +85,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                       ),
                       Text(
-                        'N° 34570',
+                        'N° 00$id',
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 20),
-                      buildText('Nombre:  $name'),
+                      buildText("Nombre:  $name"),
                       buildText('Monto:   $amount'),
                       buildText('Empresa: $transportCompany'),
-                      buildText('Fecha:   ${getFormatDate(date)}'),
+                      buildText('Fecha:   ${Formatters.getFormatDate(date)}'),
                       buildText(
-                          'Hora:    ${getFormatDate(date, format: 'HH:mm')}'),
+                        'Hora:    ${Formatters.getFormatDate(date, format: 'HH:mm')}',
+                      ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.1,
                       ),
@@ -135,12 +145,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
       textAlign: TextAlign.left,
     );
   }
+}
 
-  static getFormatDate(DateTime date, {String format = "dd MM yyyy"}) {
-    var formatter = new DateFormat(format, 'es_PE');
-    return formatter.format(date);
-    // .split(' ')
-    // .map((e) => e[0].toUpperCase() + e.substring(1).replaceFirst('.', ''))
-    // .join(' ');
-  }
+class PaymentArguments {
+  final int id;
+  PaymentArguments(this.id);
 }

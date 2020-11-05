@@ -33,6 +33,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => passengerName = name);
   }
 
+  getBalance() async {
+    var response = await BalanceRequester.balance();
+    var responseJSON = json.jsonDecode(response.body);
+    setState(() => this._balance = responseJSON[0]['amount'].toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,18 +159,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   getPassenger() async {
     var response = await AuthRequester.passenger();
     var responseJSON = json.jsonDecode(response.body);
-    print('HOLAAAAAAAA');
-    print(response.body);
     setState(() {
       this._email = responseJSON['email'];
       this._mobileNumber = responseJSON['mobile_number'];
     });
-  }
-
-  getBalance() async {
-    var response = await BalanceRequester.balance();
-    var responseJSON = json.jsonDecode(response.body);
-    setState(() => this._balance = responseJSON[0]['amount'].toString());
   }
 
   goToListPayments() => Navigator.of(context).pushNamed('/list_payments');

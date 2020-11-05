@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:palbus_app/database/recharge_requester.dart';
 
 class RechargeScreen extends StatefulWidget {
   @override
@@ -128,7 +129,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
       validator: (value) {
         if (value.isEmpty) {
           return 'El código CVV no puede ser vacío';
-        } else if(value.length != 3){
+        } else if (value.length != 3) {
           return 'El código CVV tiene solo 3 dígitos';
         }
         return null;
@@ -157,7 +158,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
       validator: (value) {
         if (value.isEmpty) {
           return 'Número de tarjeta inválido';
-        } else if(value.length != 16){
+        } else if (value.length != 16) {
           return 'Número de tarjeta contiene 16 dígitos';
         }
         return null;
@@ -213,7 +214,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       padding: EdgeInsets.symmetric(vertical: 15),
       child: Text(
-        'Ingresar',
+        'Recargar saldo',
       ),
       onPressed: () {
         FocusNode currentFocus = FocusScope.of(context);
@@ -222,7 +223,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
         }
         setState(() => this._failedLogin = false);
         if (_loginFormKey.currentState.validate()) {
-          // authenticatePassenger(context);
+          createRecharge();
         }
       },
     );
@@ -230,7 +231,15 @@ class _RechargeScreenState extends State<RechargeScreen> {
 
   SizedBox formSeparator() => SizedBox(height: 30);
 
-  void rechargeBalance(BuildContext context) async {
-    
+  void createRecharge() async {
+    var response = await RechargeRequester.createRecharge(
+      amount: _amountController.text.trim(),
+    );
+    if (response.statusCode == 201) {
+      Navigator.of(context).pop();
+      Navigator.of(context).pushReplacementNamed('/app');
+    } else {
+      setState(() => this._failedLogin = true);
+    }
   }
 }

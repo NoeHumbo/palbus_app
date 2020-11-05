@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:palbus_app/database/balance_requester.dart';
 import 'package:palbus_app/database/payment_requester.dart';
+import 'package:palbus_app/database/tarriff_requester.dart';
+import 'package:palbus_app/screens/transactions/payment_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -13,8 +15,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   ScanResult scanResult;
-
+  bool _isLoaded = false;
   String _balance = '0.0';
+  List tariffs = [];
 
   static final _possibleFormats = BarcodeFormat.values.toList()
     ..removeWhere((e) => e == BarcodeFormat.unknown);
@@ -25,12 +28,22 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     getBalance();
+    getTariffs();
   }
 
   getBalance() async {
     var response = await BalanceRequester.balance();
     var responseJSON = json.jsonDecode(response.body);
     setState(() => this._balance = responseJSON[0]['amount'].toString());
+  }
+
+  getTariffs() async {
+    var response = await TariffRequester.tariff();
+    var responseJSON = json.jsonDecode(response.body);
+    setState(() {
+      this.tariffs = responseJSON;
+      this._isLoaded = true;
+    });
   }
 
   @override
@@ -96,28 +109,42 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     height: MediaQuery.of(context).size.height * 0.70,
                     child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Seleccione un monto',
-                            style: TextStyle(
-                              color: Colors.grey[500],
-                              fontSize: 18,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                          buildOutlineButton(0.80),
-                          buildSizedBox(),
-                          buildOutlineButton(1.00),
-                          buildSizedBox(),
-                          buildOutlineButton(1.50),
-                          buildSizedBox(),
-                          buildOutlineButton(2.00),
-                          buildSizedBox(),
-                        ],
-                      ),
+                      child: _isLoaded
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Seleccione un monto',
+                                  style: TextStyle(
+                                    color: Colors.grey[500],
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                SizedBox(height: 15),
+                                buildOutlineButton(
+                                  tariffs[0]['price'],
+                                  tariffs[0]['id'],
+                                ),
+                                buildSizedBox(),
+                                buildOutlineButton(
+                                  tariffs[1]['price'],
+                                  tariffs[1]['id'],
+                                ),
+                                buildSizedBox(),
+                                buildOutlineButton(
+                                  tariffs[2]['price'],
+                                  tariffs[2]['id'],
+                                ),
+                                buildSizedBox(),
+                                buildOutlineButton(
+                                  tariffs[3]['price'],
+                                  tariffs[3]['id'],
+                                ),
+                                buildSizedBox(),
+                              ],
+                            )
+                          : null,
                     ),
                   )
                 ],
@@ -132,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
   SizedBox buildSizedBox() =>
       SizedBox(height: MediaQuery.of(context).size.height * 0.03);
 
-  RaisedButton buildOutlineButton(double price) {
+  RaisedButton buildOutlineButton(double price, int tariffId) {
     return RaisedButton(
       child: Text(
         'S/. ${price}0',
@@ -145,7 +172,11 @@ class _HomeScreenState extends State<HomeScreen> {
       color: Colors.white,
       highlightColor: Colors.blue,
       elevation: 5,
-      onPressed: () => _showDialog(price),
+      onPressed: () {
+        double.parse(_balance) >= price
+            ? _showDialog(price, tariffId)
+            : _snackBar('Saldo insuficiente');
+      },
       padding: EdgeInsets.symmetric(
         horizontal: MediaQuery.of(context).size.width * 0.25,
         vertical: MediaQuery.of(context).size.height * 0.03,
@@ -157,17 +188,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showDialog(double price) {
+  void _showDialog(double price, int tariffId) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
-            side: BorderSide(
-              color: Colors.blue[600],
-              width: 1,
-            ),
+            side: BorderSide(color: Colors.blue[600], width: 1),
           ),
           actionsPadding: EdgeInsets.only(bottom: 10),
           title: Text(
@@ -177,32 +205,24 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             RaisedButton(
               color: Colors.white,
-              padding: EdgeInsets.symmetric(
-                horizontal: 15,
-                vertical: 10,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  side: BorderSide(color: Colors.red, width: 2)),
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Cancelar',
-                style: TextStyle(color: Colors.red),
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide(color: Colors.red, width: 2),
               ),
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancelar', style: TextStyle(color: Colors.red)),
             ),
             SizedBox(width: 50),
             RaisedButton(
               color: Colors.lightGreen,
-              padding: EdgeInsets.symmetric(
-                horizontal: 15,
-                vertical: 10,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
               onPressed: () {
                 Navigator.pop(context);
-                _scanQR(price);
+                _scanQR(price, tariffId);
               },
               child: Text('Aceptar'),
             ),
@@ -213,9 +233,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  _scanQR(double price) async {
+  _scanQR(double price, int tariffId) async {
     dynamic futureString;
-
     try {
       futureString = await BarcodeScanner.scan(
         options: ScanOptions(
@@ -227,38 +246,33 @@ class _HomeScreenState extends State<HomeScreen> {
       futureString = e.toString();
     }
 
-    print('HOLA FUTURE SCAN QR');
-    print(futureString.rawContent);
-
-    if (futureString.rawContent != '') {
-      var qrValue = json.jsonDecode(futureString.rawContent);
-      // int driverID = qrValue['d_id'];
-      int busID = qrValue['b_id'];
-      // int transportCompanyID = qrValue['tc_id'];
-      // int routeID = qrValue['r_id'];
-      int tariffID = qrValue['t_id'];
-
-      if (futureString.rawContent.contains('d_id')) {
+    if (futureString.rawContent != null) {
+      print('FUTUREEEE ${futureString.rawContent}');
+      if (futureString.rawContent.contains('bus_id')) {
+        var qrValue = json.jsonDecode(futureString.rawContent);
         var response = await PaymentRequester.createPayment(
           amount: price.toString(),
-          busID: busID.toString(),
-          tariffID: tariffID.toString(),
+          busID: qrValue['bus_id'].toString(),
+          tariffID: tariffId.toString(),
         );
         var responseJSON = json.jsonDecode(response.body);
         if (response.statusCode == 201) {
-          Navigator.of(context).pushNamed('/payment', arguments: {'id': responseJSON['id']});
+          Navigator.of(context).pushNamed(
+            '/payment',
+            arguments: PaymentArguments(responseJSON['id']),
+          );
         }
       } else {
-        invalidQR();
+        _snackBar('Código QR inválido');
       }
     } else {
-      invalidQR();
+      _snackBar('Código QR inválido');
     }
   }
 
-  invalidQR() {
+  _snackBar(String content) {
     Widget snackbar = SnackBar(
-      content: Text('Código QR inválido', textAlign: TextAlign.center),
+      content: Text(content, textAlign: TextAlign.center),
       backgroundColor: Colors.blueGrey[600],
       duration: Duration(milliseconds: 1000),
       elevation: 5,
