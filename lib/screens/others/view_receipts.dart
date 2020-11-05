@@ -148,6 +148,7 @@ class _ViewReceiptsState extends State<ViewReceipts> {
 
   Container buildContainer(BuildContext context, payment) {
     return Container(
+      margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.only(
         top: 10.0,
         bottom: 10.0,
@@ -186,7 +187,7 @@ class _ViewReceiptsState extends State<ViewReceipts> {
           Container(
             width: MediaQuery.of(context).size.width,
             child: Text(
-              'Juan Perez',
+              '${json.jsonDecode(json.jsonEncode(payment['passenger']))['name']}',
               style: TextStyle(color: Colors.black54, fontSize: 18),
             ),
           ),
@@ -211,7 +212,6 @@ class _ViewReceiptsState extends State<ViewReceipts> {
   getPayments() async {
     var response = await PaymentRequester.getPayments();
     var responseJSON = json.jsonDecode(response.body);
-    print(response.body);
     setState(() {
       this.payments = responseJSON;
       this.isLoaded = true;

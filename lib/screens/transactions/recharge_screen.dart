@@ -214,7 +214,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       padding: EdgeInsets.symmetric(vertical: 15),
       child: Text(
-        'Ingresar',
+        'Recargar saldo',
       ),
       onPressed: () {
         FocusNode currentFocus = FocusScope.of(context);

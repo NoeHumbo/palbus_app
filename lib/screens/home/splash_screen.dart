@@ -13,6 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Timer _timer;
   bool _connectionStatus = false;
   final Connectivity _connectivity = Connectivity();
+  bool isOnline = false;
 
   @override
   void initState() {
@@ -27,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ? Navigator.of(context).pushReplacementNamed('/app')
                 : Navigator.of(context).pushReplacementNamed('/login');
           } else {
-            notInternetConnection();
+            setState(() => isOnline = true);
           }
         });
       },
@@ -87,10 +88,37 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         ],
       ),
+      floatingActionButton: isOnline
+          ? FlatButton.icon(
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              onPressed: null,
+              icon: Icon(
+                Icons.signal_wifi_off,
+                color: Colors.yellow[700],
+              ),
+              label: Text(
+                'No tiene conexión a Internet',
+                overflow: TextOverflow.ellipsis,
+              ),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
   notInternetConnection() {
-    print('NO HAY CONEXION A INTERNET');
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.symmetric(vertical: 5),
+            content: Text(
+              'No tiene conexión a Internet',
+              textAlign: TextAlign.center,
+            ),
+            backgroundColor: Colors.lightBlue[100],
+          );
+        },
+        barrierDismissible: false);
   }
 }

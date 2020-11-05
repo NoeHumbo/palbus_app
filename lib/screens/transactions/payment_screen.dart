@@ -1,7 +1,6 @@
 import 'dart:convert' as json;
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:palbus_app/database/payment_requester.dart';
 import 'package:palbus_app/services/formatters.dart';
 
