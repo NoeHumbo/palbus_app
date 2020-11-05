@@ -55,7 +55,7 @@ class _AppState extends State<App> {
                 page: SettingsScreen(), context: context);
           case '/payment':
             return buildPageRouteBuilder(
-                page: PaymentScreen(), context: context);
+                page: PaymentScreen(arguments: settings.arguments,), context: context);
           case '/list_payments':
             return buildPageRouteBuilder(
                 page: ViewReceipts(), context: context);
