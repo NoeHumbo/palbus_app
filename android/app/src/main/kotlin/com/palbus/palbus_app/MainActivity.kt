@@ -1,4 +1,4 @@
-package com.example.palbus_app
+package com.palbus.palbus_app
 
 import io.flutter.embedding.android.FlutterActivity
 
