@@ -7,6 +7,7 @@ import 'package:palbus_app/database/balance_requester.dart';
 import 'package:palbus_app/database/payment_requester.dart';
 import 'package:palbus_app/database/tarriff_requester.dart';
 import 'package:palbus_app/screens/transactions/payment_screen.dart';
+import 'package:palbus_app/services/formatters.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       OutlineButton(
                         child: Text(
-                          'Saldo: S/. $_balance',
+                          'Saldo: ${Formatters.getFormatNumber(double.parse(_balance))}',
                           style: TextStyle(
                             color: Colors.grey[700],
                             fontSize: 15,
@@ -162,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
   RaisedButton buildOutlineButton(double price, int tariffId) {
     return RaisedButton(
       child: Text(
-        'S/. ${price}0',
+        '${Formatters.getFormatNumber(price)}',
         style: TextStyle(
           fontSize: 20,
           color: Colors.grey[600],

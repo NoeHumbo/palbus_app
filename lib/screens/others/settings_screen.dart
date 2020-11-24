@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:palbus_app/database/auth_requester.dart';
 import 'package:palbus_app/database/balance_requester.dart';
 import 'package:palbus_app/services/auth_passenger.dart';
+import 'package:palbus_app/services/formatters.dart';
 import 'package:palbus_app/services/passenger_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -49,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Padding(
               padding: EdgeInsets.only(top: 10),
               child: Text(
-                'Saldo Disponible:\nS/ $_balance',
+                'Saldo Disponible:\n${Formatters.getFormatNumber(double.parse(_balance))}',
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey, fontSize: 18),

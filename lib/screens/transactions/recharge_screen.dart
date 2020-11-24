@@ -57,7 +57,7 @@ class _RechargeScreenState extends State<RechargeScreen> {
                             padding: EdgeInsets.only(top: 15),
                             child: Center(
                               child: Text(
-                                'Datos de Acceso Incorrectos',
+                                'Datos Incorrectos',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.red[800],
